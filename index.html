@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>每日金句 | Daily Quotes</title>
+    <style>
+        :root {
+            --norway-blue: #2E3A8C;
+            --cream: #FFF9F0;
+            --sand: #E8DCCA;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', 'Noto Sans TC', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(45deg, var(--norway-blue) 0%, var(--cream) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quote-container {
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .quote-image {
+            width: 160px;
+            height: 160px;
+            background: var(--sand);
+            border-radius: 50%;
+            margin-bottom: 30px;
+            background-size: cover;
+            background-position: center;
+            transition: opacity 0.5s ease;
+        }
+
+        .quote-text {
+            font-size: 1.4rem;
+            line-height: 1.6;
+            color: var(--norway-blue);
+            margin-bottom: 20px;
+            font-weight: 300;
+            min-height: 120px;
+        }
+
+        .quote-author {
+            color: var(--norway-blue);
+            font-size: 1rem;
+            margin-bottom: 30px;
+            opacity: 0.8;
+        }
+
+        .generate-btn {
+            background: var(--norway-blue);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .generate-btn:hover {
+            background: #1E2A78;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 58, 140, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .quote-text {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="quote-container">
+            <div class="quote-image" id="quoteImage"></div>
+            <p class="quote-text" id="quote">點擊按鈕獲取靈感金句</p>
+            <p class="quote-author" id="author"></p>
+            <button class="generate-btn" onclick="generateContent()">新的靈感</button>
+        </div>
+    </div>
+
+    <script>
+        // 預存10張免版權圖片
+        const presetImages = [
+            'https://images.unsplash.com/photo-1495446815901-a7297e633e8d',  // 書籍
+            'https://images.unsplash.com/photo-1507842217343-583bb7270b66',  // 圖書館
+            'https://images.unsplash.com/photo-1455390582262-044cdead277a',  // 筆記本
+            'https://images.unsplash.com/photo-1497864149936-d3163f0c0f4b',  // 森林
+            'https://images.unsplash.com/photo-1469474968028-56623f02e42e',  // 自然景觀
+            'https://images.unsplash.com/photo-1500382017468-9049fed747ef',  // 麥田
+            'https://images.unsplash.com/photo-1494253109108-2e30c049369b',  // 咖啡與書
+            'https://images.unsplash.com/photo-1490638114763-026709429790',  // 日出
+            'https://images.unsplash.com/photo-1504198266287-1659872e6590',  // 山路
+            'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b'   // 雪山
+        ].map(url => `${url}?auto=format&fit=crop&w=400&h=400&q=80`);
+
+        const quotes = [
+            { text: "路漫漫其修遠兮，吾將上下而求索。", author: "屈原", lang: "zh" },
+            { text: "不積跬步，無以至千里；不積小流，無以成江海。", author: "荀子", lang: "zh" },
+            { text: "The greatest glory in living lies not in never falling, but in rising every time we fall.", author: "Nelson Mandela", lang: "en" },
+            { text: "The way to get started is to quit talking and begin doing.", author: "Walt Disney", lang: "en" },
+            // 添加更多金句...
+        ];
+
+        function getRandomImage() {
+            return presetImages[Math.floor(Math.random() * presetImages.length)];
+        }
+
+        function animateContent() {
+            const quoteImage = document.getElementById('quoteImage');
+            const quoteElement = document.getElementById('quote');
+            const authorElement = document.getElementById('author');
+
+            // 淡出動畫
+            quoteImage.style.opacity = 0;
+            quoteElement.style.opacity = 0;
+            authorElement.style.opacity = 0;
+
+            setTimeout(() => {
+                // 載入新內容
+                quoteImage.style.backgroundImage = `url('${getRandomImage()}')`;
+                const selectedQuote = quotes[Math.floor(Math.random() * quotes.length)];
+                
+                quoteElement.textContent = selectedQuote.text;
+                authorElement.textContent = `- ${selectedQuote.author}`;
+                quoteElement.style.fontFamily = selectedQuote.lang === 'zh' 
+                    ? "'Noto Sans TC', sans-serif" 
+                    : "'Helvetica Neue', sans-serif";
+
+                // 淡入動畫
+                quoteImage.style.opacity = 1;
+                quoteElement.style.opacity = 1;
+                authorElement.style.opacity = 1;
+            }, 500);
+        }
+
+        function generateContent() {
+            animateContent();
+        }
+
+        // 初始化載入
+        document.getElementById('quoteImage').style.backgroundImage = `url('${getRandomImage()}')`;
+        generateContent();
+    </script>
+</body>
+</html>
